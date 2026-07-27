@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="旅行工作台">
+<meta name="theme-color" content="#f472b6">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
 <title>古埃及到东罗马 · 旅行工作台</title>
 <style>
   :root,
@@ -1011,9 +1017,14 @@ window.exportData=exportData; window.importData=importData; window.collectData=c
   }
   // 3. 每30秒自动同步
   setInterval(()=>{ saveLocal(); cloudSave(collectData()); },30000);
-  // 4. 每5分钟从云端拉取最新数据（小智的更新）
+  // 5. 每5分钟从云端拉取最新数据（小智的更新）
   setInterval(async()=>{ const c=await cloudLoad(); if(c&&(c.ts||0)>(collectData().ts||0)){ applyData(c); saveLocal(); } },300000);
 })();
+
+// ===== PWA Service Worker 注册 =====
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
 </script>
 </body>
 </html>
