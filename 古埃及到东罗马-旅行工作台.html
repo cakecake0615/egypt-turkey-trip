@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古埃及到东罗马 · 旅行工作台</title>
+<style>
+  :root,
+  [data-theme="pink-green"]{
+    --bg:#f7f8fc; --card:#fff; --accent:#f472b6; --accent2:#34d399;
+    --text:#1f2937; --muted:#6b7280; --dim:#9ca3af; --line:#eef0f6;
+    --green:#34d399; --green-d:#059669; --green-l:#d1fae5;
+    --pink:#f472b6; --pink-d:#db2777; --pink-l:#fce7f3;
+    --blue:#60a5fa; --blue-l:#dbeafe;
+    --yellow:#fbbf24; --yellow-l:#fef3c7;
+    --purple:#a78bfa; --purple-l:#ede9fe;
+    --cyan:#22d3ee; --cyan-l:#cffafe;
+    --hero-bg:linear-gradient(135deg,#d1fae5 0%,#fce7f3 50%,#dbeafe 100%);
+    --hero-text:#1f2937;
+    --shadow:0 6px 24px rgba(0,0,0,.05);
+  }
+  [data-theme="skyblue"]{
+    --bg:#eef7ff; --card:#ffffff;
+    --accent:#38bdf8; --accent2:#818cf8;
+    --text:#0f172a; --muted:#475569; --dim:#94a3b8; --line:#e2e8f0;
+    --green:#38bdf8; --green-d:#0284c7; --green-l:#e0f2fe;
+    --pink:#818cf8; --pink-d:#4f46e5; --pink-l:#e0e7ff;
+    --blue:#38bdf8; --blue-l:#dbeafe;
+    --yellow:#fbbf24; --yellow-l:#fef3c7;
+    --purple:#a78bfa; --purple-l:#ede9fe;
+    --cyan:#22d3ee; --cyan-l:#cffafe;
+    --hero-bg:linear-gradient(135deg,#dbeafe 0%,#e0f2fe 50%,#ede9fe 100%);
+    --hero-text:#0c4a6e;
+    --shadow:0 6px 24px rgba(56,189,248,.15);
+  }
+  [data-theme="mono"]{
+    --bg:#f4f4f5; --card:#ffffff;
+    --accent:#18181b; --accent2:#71717a;
+    --text:#18181b; --muted:#52525b; --dim:#a1a1aa; --line:#e4e4e7;
+    --green:#52525b; --green-d:#27272a; --green-l:#f4f4f5;
+    --pink:#71717a; --pink-d:#3f3f46; --pink-l:#f4f4f5;
+    --blue:#71717a; --blue-l:#f4f4f5;
+    --yellow:#a16207; --yellow-l:#fef3c7;
+    --purple:#52525b; --purple-l:#f4f4f5;
+    --cyan:#71717a; --cyan-l:#f4f4f5;
+    --hero-bg:linear-gradient(135deg,#e4e4e7 0%,#f4f4f5 50%,#e4e4e7 100%);
+    --hero-text:#27272a;
+    --shadow:0 4px 14px rgba(0,0,0,.08);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.55;transition:background .4s,color .4s}
+  .app{display:flex;min-height:100vh}
+
+  /* 左侧边栏（桌面+手机通用） */
+  .sidebar{width:280px;background:var(--card);border-right:1px solid var(--line);position:fixed;height:100vh;left:0;top:0;z-index:100;padding:20px 14px;overflow-y:auto;transition:width .3s, padding .3s}
+  .sidebar.collapsed{width:0;padding:0;overflow:hidden;border-right:none}
+  .sidebar.collapsed .profile,.sidebar.collapsed .menu-item,.sidebar.collapsed .menu-title{display:none}
+  /* 折叠按钮 */
+  .toggle-btn{
+    position:fixed;left:282px;top:50%;transform:translateY(-50%);
+    width:26px;height:50px;border-radius:0 10px 10px 0;
+    background:var(--card);border:1px solid var(--line);border-left:none;
+    cursor:pointer;z-index:101;display:flex;align-items:center;justify-content:center;
+    font-size:.9rem;color:var(--muted);transition:left .3s;
+    box-shadow:2px 0 6px rgba(0,0,0,.05);
+  }
+  .toggle-btn.collapsed{left:0}
+  .main{transition:margin-left .3s}
+  .profile{background:linear-gradient(135deg,var(--green-l),var(--pink-l));border-radius:20px;padding:16px;display:flex;align-items:center;gap:11px;margin-bottom:16px}
+  .profile-av{width:44px;height:44px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:var(--shadow)}
+  .profile-info h2{font-size:.9rem;font-weight:800;color:var(--hero-text)}
+  .profile-info p{font-size:.68rem;color:var(--muted);margin-top:2px}
+  .menu-title{font-size:.68rem;color:var(--muted);font-weight:700;letter-spacing:.1em;margin:12px 8px 6px}
+  .menu-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:13px;margin-bottom:3px;cursor:pointer;color:var(--text);font-size:.82rem;font-weight:600;transition:.18s;text-decoration:none}
+  .menu-item:hover{background:var(--green-l)}
+  .menu-item.active{background:linear-gradient(135deg,var(--green-l),var(--pink-l))}
+  .menu-ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+  .menu-ic.g{background:var(--green-l);color:var(--green-d)}
+  .menu-ic.p{background:var(--pink-l);color:var(--pink-d)}
+  .menu-ic.b{background:var(--blue-l);color:var(--green-d)}
+  .menu-ic.y{background:var(--yellow-l);color:#b45309}
+  .menu-ic.v{background:var(--purple-l);color:#6d28d9}
+  .menu-ic.c{background:var(--cyan-l);color:#0e7490}
+  .menu-nm{flex:1;min-width:0}
+  .menu-nm .t{font-weight:700}
+  .menu-nm .s{font-size:.64rem;color:var(--muted);margin-top:1px}
+  .badge{font-size:.66rem;font-weight:700;padding:2px 7px;border-radius:9px;background:var(--green);color:#fff}
+
+  /* 主区 */
+  .main{margin-left:280px;flex:1;min-width:0}
+  .main.expanded{margin-left:0}
+  .content{padding:26px 32px 70px;max-width:1000px;margin:0 auto}
+
+  .hero{background:var(--hero-bg);border-radius:24px;padding:28px 32px;box-shadow:var(--shadow);margin-bottom:26px;position:relative;overflow:hidden;transition:.4s}
+  .hero h1{font-size:1.6rem;font-weight:800;margin-bottom:5px;position:relative;color:var(--hero-text)}
+  .hero p{color:var(--muted);font-size:.84rem;margin-bottom:12px;position:relative}
+  .hero-tags{display:flex;gap:8px;flex-wrap:wrap;position:relative}
+  .htag{font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:18px;background:rgba(255,255,255,.85);color:var(--green-d);box-shadow:0 2px 6px rgba(0,0,0,.05)}
+  .htag.p{color:var(--pink-d)}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:26px}
+  .sc{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .sc .ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:7px}
+  .sc.g .ic{background:var(--green-l)}
+  .sc.p .ic{background:var(--pink-l)}
+  .sc.b .ic{background:var(--blue-l)}
+  .sc.y .ic{background:var(--yellow-l)}
+  .sc .n{font-size:1.4rem;font-weight:800}
+  .sc .l{font-size:.7rem;color:var(--muted)}
+
+  .sec{margin-bottom:34px;scroll-margin-top:20px}
+  .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+  .st{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:8px;color:var(--hero-text)}
+  .st .d{width:7px;height:16px;border-radius:4px;background:var(--accent)}
+  .st .cute{font-size:.95rem}
+  .ss{font-size:.72rem;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .btn-add{border:2px dashed var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);border-radius:11px;padding:6px 13px;font-size:.76rem;font-weight:700;cursor:pointer;transition:.2s}
+  .btn-add:hover{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+
+  .hscroll{display:flex;gap:13px;overflow-x:auto;padding:4px 4px 14px}
+  .hscroll::-webkit-scrollbar{height:6px}
+  .hscroll::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;opacity:.5}
+  .dc{flex:0 0 260px;background:var(--card);border-radius:16px;padding:15px;box-shadow:var(--shadow);border:1px solid var(--line);scroll-snap-align:start;cursor:pointer;transition:.2s}
+  .dc:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .dc.eg{border-top:4px solid var(--green)}
+  .dc.tk{border-top:4px solid var(--pink)}
+  .dc .top{display:flex;justify-content:space-between;margin-bottom:7px}
+  .dc .dt{font-weight:800;font-size:.88rem}
+  .dc .dt span{display:block;font-size:.68rem;color:var(--muted);font-weight:500;margin-top:1px}
+  .dc .loc{font-size:.68rem;padding:3px 8px;border-radius:10px;background:var(--green-l);color:var(--green-d);font-weight:700;height:fit-content}
+  .dc.tk .loc{background:var(--pink-l);color:var(--pink-d)}
+  .dc ul{list-style:none;margin:5px 0}
+  .dc li{padding:4px 0 4px 13px;position:relative;font-size:.75rem;color:var(--text);border-bottom:1px dashed var(--line)}
+  .dc li:last-child{border-bottom:none}
+  .dc li::before{content:"🌱";position:absolute;left:0;top:4px;font-size:.6rem;opacity:.7}
+  .dc.tk li::before{content:"🌷"}
+  .dc .ofprev{display:flex;gap:6px;margin-top:7px;padding-top:7px;border-top:1px dashed var(--line)}
+  .dc .ofprev div{flex:1;font-size:.62rem;color:var(--muted);background:var(--green-l);border-radius:6px;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dc.tk .ofprev div{background:var(--pink-l)}
+  .dc .ofprev b{display:block;color:var(--text)}
+  .dc .ofprev .c b{color:var(--green-d)}
+  .dc .ofprev .z b{color:var(--pink-d)}
+  .dc .openhint{font-size:.62rem;color:var(--accent);margin-top:7px;font-weight:600}
+
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .pc{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .pc.c{border-top:4px solid var(--green)}
+  .pc.z{border-top:4px solid var(--pink)}
+  .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .pn{font-weight:800;font-size:.88rem;display:flex;align-items:center;gap:7px}
+  .av{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:700}
+  .av.c{background:var(--green)}
+  .av.z{background:var(--pink)}
+  .pp{font-size:.7rem;color:var(--muted);text-align:right}
+  .pp .bar{height:5px;background:var(--green-l);border-radius:3px;margin-top:4px;overflow:hidden;width:100px}
+  .pp .fl{height:100%;border-radius:3px;transition:.3s;background:var(--green)}
+  .pc.z .pp .fl{background:var(--pink)}
+  .pl{max-height:360px;overflow-y:auto;padding-right:5px}
+  .pl::-webkit-scrollbar{width:4px}
+  .pl::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+  .pi{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid var(--green-l);cursor:pointer}
+  .pc.z .pi{border-bottom-color:var(--pink-l)}
+  .pi .cb{width:17px;height:17px;border:2px solid var(--pink);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:.2s}
+  .pi.done .cb{background:var(--green);border-color:var(--green)}
+  .pi.done .cb::after{content:"✓";color:#fff;font-size:10px;font-weight:800}
+  .pi .nm{font-size:.78rem;transition:.2s;flex:1}
+  .pi.done .nm{text-decoration:line-through;color:var(--muted)}
+  .pi .nt{font-size:.64rem;color:var(--dim);margin-top:1px}
+  .pi .it-del{border:none;background:var(--green-l);color:var(--green-d);width:19px;height:19px;border-radius:5px;cursor:pointer;font-size:.85rem;flex-shrink:0;align-self:center;line-height:1;transition:.2s}
+  .pi .it-del:hover{background:var(--pink);color:#fff}
+
+  .ec{background:var(--card);border-radius:16px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .et{width:100%;border-collapse:collapse;font-size:.8rem}
+  .et th,.et td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left}
+  .et th{color:var(--muted);font-weight:700;font-size:.72rem;background:var(--green-l)}
+  .et td input{border:none;width:100%;font-size:.8rem;font-family:inherit;background:transparent;padding:3px 0;color:var(--text)}
+  .et td input:focus{outline:none;color:var(--green-d);background:var(--green-l)}
+  .et td.amt input{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  .esum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:13px}
+  .es{background:linear-gradient(135deg,var(--green-l),var(--pink-l));border-radius:12px;padding:12px;text-align:center}
+  .es .v{font-size:1.2rem;font-weight:800}
+  .es.c .v{color:var(--green-d)}
+  .es.z .v{color:var(--pink-d)}
+  .es.t .v{color:var(--green-d)}
+  .es .l{font-size:.64rem;color:var(--muted)}
+
+  .cv{background:var(--card);border-radius:16px;padding:18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .cvr{display:flex;gap:10px;align-items:flex-end;margin-bottom:13px;flex-wrap:wrap}
+  .cf{flex:1;min-width:115px}
+  .cf label{font-size:.68rem;color:var(--muted);display:block;margin-bottom:4px}
+  .cf input,.cf select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 11px;font-size:.92rem;font-family:inherit;background:var(--green-l);color:var(--text)}
+  .cf input:focus,.cf select:focus{outline:none;border-color:var(--accent);background:#fff}
+  .sw{padding:10px 12px;border-radius:10px;background:var(--pink-l);border:none;color:var(--pink-d);cursor:pointer;font-size:1rem;transition:.2s}
+  .sw:hover{transform:rotate(180deg)}
+  .cres{background:linear-gradient(135deg,var(--green-l),var(--blue-l));border-radius:13px;padding:15px;text-align:center}
+  .cres .v{font-size:1.6rem;font-weight:800;color:var(--green-d)}
+  .cres .p{font-size:.72rem;color:var(--muted);margin-top:3px}
+  .rg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+  .rc{background:var(--pink-l);border-radius:10px;padding:9px;text-align:center}
+  .rc .r{font-size:.9rem;font-weight:800;color:var(--pink-d)}
+  .rc .pa{font-size:.6rem;color:var(--muted);margin-top:2px}
+
+  .tips{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+  .tip{background:var(--card);border-radius:14px;padding:13px;box-shadow:var(--shadow);border:1px solid var(--line);border-left:4px solid var(--purple);position:relative}
+  .tip .t{font-weight:800;font-size:.8rem;margin-bottom:3px;color:#6d28d9;padding-right:24px}
+  .tip .d{font-size:.72rem;color:var(--muted)}
+  .tip .del{position:absolute;top:10px;right:10px;border:none;background:#fee2e2;color:#dc2626;width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:700;transition:.2s}
+  .tip .del:hover{background:#dc2626;color:#fff}
+
+  footer{text-align:center;padding:18px;color:var(--dim);font-size:.68rem}
+
+  /* 弹窗（每日详情 / 设置） */
+  .modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--card);border-radius:22px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal-head{background:linear-gradient(135deg,var(--green-l),var(--pink-l));padding:20px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+  .modal-head h3{font-size:1.1rem;font-weight:800;color:var(--hero-text)}
+  .modal-close{border:none;background:rgba(255,255,255,.7);width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer}
+  .modal-body{padding:20px 24px}
+  .mb-label{font-size:.76rem;font-weight:700;color:var(--muted);margin:16px 0 7px;display:flex;align-items:center;gap:6px}
+  .mb-label.c{color:var(--green-d)}
+  .mb-label.z{color:var(--pink-d)}
+  .mb-input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.92rem;font-family:inherit;background:var(--green-l);resize:vertical;min-height:52px;line-height:1.5}
+  .mb-input:focus{outline:none;border-color:var(--accent);background:#fff}
+  .mb-acts{font-size:.78rem;color:var(--text);background:var(--green-l);border-radius:12px;padding:13px 16px}
+  .mb-acts li{margin:3px 0;list-style:inside}
+  .nt-block{margin-top:10px}
+  .nt-item{display:flex;justify-content:space-between;align-items:center;background:var(--green-l);border-radius:9px;padding:8px 12px;margin-bottom:6px;font-size:.78rem;color:var(--green-d)}
+  .nt-item button{border:none;background:none;color:var(--green-d);font-size:1rem;cursor:pointer;line-height:1}
+  .nt-add{width:100%;border:2px dashed var(--pink);background:var(--pink-l);color:var(--pink-d);border-radius:11px;padding:10px;font-size:.8rem;font-weight:700;cursor:pointer;margin-top:6px}
+
+  /* 设置弹窗 */
+  .set-theme-row{display:flex;gap:10px;margin-top:10px}
+  .set-theme{flex:1;border:2px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s}
+  .set-theme.on{border-color:var(--accent);background:var(--green-l)}
+  .set-theme .swatch{height:34px;border-radius:9px;margin-bottom:7px}
+  .set-theme .nm{font-size:.74rem;font-weight:700}
+  .set-theme.pg .swatch{background:linear-gradient(135deg,#34d399,#f472b6)}
+  .set-theme.sb .swatch{background:linear-gradient(135deg,#38bdf8,#818cf8)}
+  .set-theme.mo .swatch{background:linear-gradient(135deg,#a1a1aa,#52525b)}
+
+  /* 手机上边栏正常显示 */
+  @media(max-width:900px){
+    .sidebar{width:240px}
+    .main{margin-left:240px}
+    .content{padding:16px}
+    .pgrid,.tips,.esum{grid-template-columns:1fr}
+    .dc{flex:0 0 230px}
+    .rg{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:560px){
+    .sidebar{width:200px}
+    .main{margin-left:200px}
+    .content{padding:12px}
+    .modal{max-width:100%;max-height:92vh}
+    .modal-body{padding:16px 16px}
+    .mb-input{font-size:.82rem;min-height:50px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="profile">
+      <div class="profile-av">🧳</div>
+      <div class="profile-info"><h2>旅行工作台</h2><p>小陈 &amp; 小智</p></div>
+    </div>
+    <a class="menu-item active" href="#overview"><div class="menu-ic b">📊</div><div class="menu-nm"><div class="t">概览</div><div class="s">行程总览</div></div></a>
+    <div class="menu-title">每日行程</div>
+    <a class="menu-item" href="#egypt"><div class="menu-ic g">🇪🇬</div><div class="menu-nm"><div class="t">埃及行程</div><div class="s">8月2日-8月11日</div></div><span class="badge">10天</span></a>
+    <a class="menu-item" href="#turkey"><div class="menu-ic p">🇹🇷</div><div class="menu-nm"><div class="t">土耳其行程</div><div class="s">8月11日-8月17日</div></div><span class="badge">7天</span></a>
+    <div class="menu-title">准备事项</div>
+    <a class="menu-item" href="#packing"><div class="menu-ic y">🎒</div><div class="menu-nm"><div class="t">物品准备</div></div></a>
+    <a class="menu-item" href="#expense"><div class="menu-ic c">💰</div><div class="menu-nm"><div class="t">经费核算</div></div></a>
+    <a class="menu-item" href="#converter"><div class="menu-ic v">💱</div><div class="menu-nm"><div class="t">汇率换算</div><div class="s">5种货币</div></div></a>
+    <a class="menu-item" href="#translator"><div class="menu-ic b">🌐</div><div class="menu-nm"><div class="t">翻译器</div><div class="s">中/阿/土</div></div></a>
+    <div class="menu-title">其他</div>
+    <a class="menu-item" href="#sync"><div class="menu-ic c">💾</div><div class="menu-nm"><div class="t">数据同步</div><div class="s">导出/导入</div></div></a>
+    <a class="menu-item" href="#tips"><div class="menu-ic p">📌</div><div class="menu-nm"><div class="t">注意事项</div></div></a>
+    <div class="menu-item" id="openSettings" onclick="document.getElementById('setBg').classList.add('show')" style="margin-top:14px;border:2px dashed var(--line);cursor:pointer"><div class="menu-ic v">⚙️</div><div class="menu-nm"><div class="t">设置</div></div></div>
+  </aside>
+  <div class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">‹</div>
+
+  <main class="main">
+    <div class="content">
+      <section id="overview" class="sec">
+        <div class="hero">
+          <div>
+            <h1>古埃及 → 东罗马</h1>
+            <p>2026年8月2日 – 8月17日 · 17天跨国之旅</p>
+            <div class="hero-tags">
+              <span class="htag">🇪🇬 埃及 10天</span>
+              <span class="htag p">🇹🇷 土耳其 7天</span>
+            </div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="sc g"><div class="ic">🏛️</div><div class="n">10 天</div><div class="l">埃及段</div></div>
+          <div class="sc p"><div class="ic">🕌</div><div class="n">7 天</div><div class="l">土耳其段</div></div>
+          <div class="sc b"><div class="ic">📍</div><div class="n">7 城</div><div class="l">途经城市</div></div>
+          <div class="sc y"><div class="ic">🎒</div><div class="n">52 项</div><div class="l">物品清单</div></div>
+        </div>
+      </section>
+
+      <section id="egypt" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>🇪🇬 埃及行程 <span class="cute">🌸</span></div><div class="ss">点击卡片看城市介绍/历史 · 横向滑动</div></div>
+        <div class="hscroll" id="egyptDays"></div>
+      </section>
+
+      <section id="turkey" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>🇹🇷 土耳其行程 <span class="cute">🌷</span></div><div class="ss">点击卡片看城市介绍/历史 · 横向滑动</div></div>
+        <div class="hscroll" id="turkeyDays"></div>
+      </section>
+
+      <section id="packing" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>🎒 物品准备清单 <span class="cute">🪴</span></div><div class="ss"><button id="addChen" class="btn-add" onclick="addChen()">+ 小陈添加</button><button id="addZhi" class="btn-add" onclick="addZhi()">+ 小智添加</button></div></div>
+        <div class="pgrid">
+          <div class="pc c">
+            <div class="ph"><div class="pn"><span class="av c">陈</span>小陈的物品</div><div class="pp"><span id="cp">0%</span><div class="bar"><div class="fl" id="cb" style="width:0%"></div></div></div></div>
+            <div class="pl" id="cl"></div>
+          </div>
+          <div class="pc z">
+            <div class="ph"><div class="pn"><span class="av z">智</span>小智的物品</div><div class="pp"><span id="zp">0%</span><div class="bar"><div class="fl" id="zb" style="width:0%"></div></div></div></div>
+            <div class="pl" id="zl"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="expense" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>💰 经费核算 <span class="cute">⭐</span></div><div class="ss"><button id="addExp" class="btn-add" onclick="addExp()">+ 添加支出</button></div></div>
+        <div class="ec">
+          <div style="overflow-x:auto">
+            <table class="et">
+              <thead><tr><th>支出项目</th><th style="text-align:right">小陈 (元)</th><th style="text-align:right">小智 (元)</th><th>备注</th></tr></thead>
+              <tbody id="eb"></tbody>
+            </table>
+          </div>
+          <div class="esum">
+            <div class="es c"><div class="v" id="cs">0</div><div class="l">小陈合计</div></div>
+            <div class="es z"><div class="v" id="zs">0</div><div class="l">小智合计</div></div>
+            <div class="es t"><div class="v" id="gs">0</div><div class="l">总支出</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="converter" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>💱 汇率换算 <span class="cute">🪙</span></div><div class="ss">人民币/美元/欧元/埃镑/里拉 · 2026.07.27</div></div>
+        <div class="cv">
+          <div class="cvr">
+            <div class="cf"><label>金额</label><input type="number" id="amt" value="100" min="0"></div>
+            <div class="cf"><label>当地货币</label><select id="from"><option>EGP</option><option>TRY</option><option>USD</option><option>EUR</option><option>CNY</option></select></div>
+            <button class="sw" id="sw">⇄</button>
+            <div class="cf"><label>换成</label><select id="to"><option selected>CNY</option><option>EGP</option><option>TRY</option><option>USD</option><option>EUR</option></select></div>
+          </div>
+          <div class="cres"><div class="v" id="res">—</div><div class="p" id="pair"></div></div>
+          <div class="rg" id="rg"></div>
+        </div>
+      </section>
+
+      <section id="translator" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>🌐 翻译器 <span class="cute">🗣️</span></div><div class="ss">中文 ⇄ 阿拉伯语/土耳其语</div></div>
+        <div class="cv">
+          <div class="cf" style="margin-bottom:10px"><label>输入中文或外语</label><textarea id="trInput" rows="2" placeholder="输入要翻译的文字…" style="width:100%;border:2px solid var(--line);border-radius:12px;padding:10px;font-size:.85rem;resize:vertical;font-family:inherit"></textarea></div>
+          <div class="cvr" style="margin-bottom:10px">
+            <div class="cf"><label>从</label><select id="trFrom" style="border:2px solid var(--line);border-radius:10px;padding:8px;font-size:.8rem">
+              <option value="zh">中文</option>
+              <option value="ar">阿拉伯语</option>
+              <option value="tr">土耳其语</option>
+              <option value="en">英语</option>
+            </select></div>
+            <button class="sw" onclick="trSwap()" style="margin-top:18px">⇄</button>
+            <div class="cf"><label>译成</label><select id="trTo" style="border:2px solid var(--line);border-radius:10px;padding:8px;font-size:.8rem">
+              <option value="ar" selected>阿拉伯语</option>
+              <option value="tr">土耳其语</option>
+              <option value="zh">中文</option>
+              <option value="en">英语</option>
+            </select></div>
+          </div>
+          <button class="btn-add" onclick="doTranslate()" style="width:100%;padding:11px;font-size:.85rem;margin-bottom:10px">🔄 翻译</button>
+          <div id="trResult" style="background:var(--green-l);border-radius:12px;padding:14px;min-height:50px;font-size:.88rem;line-height:1.6;white-space:pre-wrap;word-break:break-all">翻译结果会显示在这里…</div>
+          <div style="margin-top:12px">
+            <div class="mb-label" style="margin-bottom:8px">💬 常用语（点击翻译）</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <button class="btn-add" onclick="quickTr('你好，多少钱？','zh','ar')" style="font-size:.72rem;padding:5px 10px">你好，多少钱？</button>
+              <button class="btn-add" onclick="quickTr('谢谢','zh','ar')" style="font-size:.72rem;padding:5px 10px">谢谢</button>
+              <button class="btn-add" onclick="quickTr('请问洗手间在哪里？','zh','ar')" style="font-size:.72rem;padding:5px 10px">洗手间在哪？</button>
+              <button class="btn-add" onclick="quickTr('太贵了，便宜点','zh','ar')" style="font-size:.72rem;padding:5px 10px">便宜点</button>
+              <button class="btn-add" onclick="quickTr('我要这个','zh','ar')" style="font-size:.72rem;padding:5px 10px">我要这个</button>
+              <button class="btn-add" onclick="quickTr('不需要，谢谢','zh','ar')" style="font-size:.72rem;padding:5px 10px">不需要</button>
+              <button class="btn-add" onclick="quickTr('你好，多少钱？','zh','tr')" style="font-size:.72rem;padding:5px 10px">多少钱？(土)</button>
+              <button class="btn-add" onclick="quickTr('谢谢','zh','tr')" style="font-size:.72rem;padding:5px 10px">谢谢(土)</button>
+              <button class="btn-add" onclick="quickTr('请问洗手间在哪里？','zh','tr')" style="font-size:.72rem;padding:5px 10px">洗手间(土)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sync" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>💾 数据同步 <span class="cute">🔗</span></div><div class="ss">在线自动同步 · 离线可导出</div></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+          <button class="btn-add" onclick="exportData()" style="flex:1;min-width:120px;padding:12px;font-size:.85rem">📤 导出数据</button>
+          <label class="btn-add" style="flex:1;min-width:120px;padding:12px;font-size:.85rem;text-align:center;cursor:pointer">
+            📥 导入数据
+            <input type="file" accept=".json" style="display:none" onchange="importData(this.files[0])">
+          </label>
+        </div>
+        <div style="font-size:.72rem;color:var(--muted);line-height:1.6;background:var(--green-l);border-radius:10px;padding:10px">
+          💡 <b>使用说明</b><br>
+          · 在线时数据自动同步到云端，你和小智打开同一链接即可共享<br>
+          · 离线时数据存在手机本地，不会丢失<br>
+          · 出国前点「导出数据」保存文件，到了国外用微信发给小智，他点「导入数据」即可同步<br>
+          · 翻译器需要联网使用，出国后连WiFi即可
+        </div>
+      </section>
+
+      <section id="tips" class="sec">
+        <div class="sh"><div class="st"><span class="d"></span>📌 注意事项 <span class="cute">☁️</span></div></div>
+        <button id="addTip" class="btn-add" onclick="addTip()" style="width:100%;margin-bottom:14px;padding:12px;font-size:.9rem">+ 添加注意事项</button>
+        <div class="tips" id="tipsList"></div>
+      </section>
+
+      <footer>古埃及到东罗马 · 旅行工作台 · 2026.07.27</footer>
+    </div>
+  </main>
+</div>
+
+<!-- 每日大编辑弹窗 -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal">
+    <div class="modal-head"><h3 id="mTitle">每日详情</h3><button class="modal-close" id="mClose" onclick="document.getElementById('modalBg').classList.remove('show')">×</button></div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+</div>
+
+<!-- 设置弹窗 -->
+<div class="modal-bg" id="setBg" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>⚙️ 设置</h3><button class="modal-close" id="setClose" onclick="document.getElementById('setBg').classList.remove('show')">×</button></div>
+    <div class="modal-body">
+      <div class="mb-label">🎨 主题风格</div>
+      <div class="set-theme-row">
+        <div class="set-theme pg on" data-theme="pink-green" onclick="setTheme('pink-green')"><div class="swatch"></div><div class="nm">粉绿小清新</div></div>
+        <div class="set-theme sb" data-theme="skyblue" onclick="setTheme('skyblue')"><div class="swatch"></div><div class="nm">天蓝色</div></div>
+        <div class="set-theme mo" data-theme="mono" onclick="setTheme('mono')"><div class="swatch"></div><div class="nm">黑白灰</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 侧栏折叠 =====
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar'),
+        tb=document.getElementById('toggleBtn'),
+        main=document.querySelector('.main');
+  sb.classList.toggle('collapsed');
+  tb.classList.toggle('collapsed');
+  main.classList.toggle('expanded');
+  tb.textContent = sb.classList.contains('collapsed') ? '›' : '‹';
+  localStorage.setItem('sidebarCollapsed', sb.classList.contains('collapsed')?'1':'0');
+}
+window.toggleSidebar=toggleSidebar;
+// 记住折叠状态
+const savedCollapsed=localStorage.getItem('sidebarCollapsed');
+if(savedCollapsed==='1'){
+  document.getElementById('sidebar').classList.add('collapsed');
+  document.getElementById('toggleBtn').classList.add('collapsed');
+  document.querySelector('.main').classList.add('expanded');
+  document.getElementById('toggleBtn').textContent='›';
+}
+
+// ===== 行程数据（含城市介绍/景点历史） =====
+const E=[
+ {d:"08-02",w:"周日",loc:"机场",acts:["航班","机场"],nt:["备好一次性拖鞋","飞机行李：4+8kg","托运行李：23kg","不要焦虑，船到桥头自然直，千万别延误🙏🙏"],oc:"",oz:"",h:"—",city:"",hist:""},
+ {d:"08-03",w:"周一",loc:"开罗",acts:["机场","垃圾城","洞穴教堂"],nt:["洞穴教堂不能穿过于暴露，可以带上丝巾"],oc:"",oz:"",h:"开罗酒店",
+  city:"开罗是埃及首都，非洲与阿拉伯世界最大的城市，被誉为”千塔之城”。位于尼罗河三角洲南端，始建于公元969年法蒂玛王朝时期，后成为马穆鲁克王朝和奥斯曼帝国的重要政治中心。老城区密布清真寺、教堂与犹太会堂，是伊斯兰世界的文化重镇。开罗同时也是探访古埃及文明的门户，吉萨金字塔群就在其西郊。",
+  hist:"【垃圾城】开罗的扎布林社区（Zabbaleen），居住着约6万名科普特基督徒，靠回收开罗全城垃圾为生，回收率高达80%，被誉为全球最环保的社区之一。【洞穴教堂】位于莫卡塔姆山体内，由扎布林人手工开凿而成，可容纳两万人，是中东最大教堂之一，岩壁上刻满圣经故事浮雕，见证了这个边缘社区的信仰与坚韧。"},
+ {d:"08-04",w:"周二",loc:"开罗",acts:["吉萨金字塔","狮身人面像","骑骆驼","大埃及博物馆","哈利利集市"],nt:[],oc:"",oz:"",h:"开罗酒店",
+  city:"开罗西郊的吉萨高原是古埃及文明最辉煌的见证。这里矗立着世界七大奇迹中唯一存留至今的吉萨金字塔群，以及神秘的狮身人面像。2023年新建的大埃及博物馆就在金字塔脚下，成为全球最大的考古博物馆。傍晚的哈利利集市则是感受阿拉伯市井风情的最佳去处。",
+  hist:"【吉萨金字塔群】建于约公元前2580年，由胡夫、哈夫拉、孟卡拉三位法老的陵墓组成。胡夫金字塔原高146.5米，由约230万块巨石垒成，是世界七大奇迹中唯一存留至今的建筑。【狮身人面像】高20米、长72米，由一整块石灰岩雕刻而成，面朝东方，被认为是法老哈夫拉的肖像，距今约4500年，鼻子在古代已损毁。【大埃及博物馆】2023年部分开放，占地约50万平方米，收藏10万件文物，其中图坦卡蒙全部陪葬品首次集中展出。【哈利利集市】14世纪开埠的古老巴扎，是中东最著名的市场之一，铜器、香料、纸莎草画、水烟壶琳琅满目。"},
+ {d:"08-05",w:"周三",loc:"赫尔格达",acts:["红海","酒店午餐","特色骑马"],nt:["车程5小时"],oc:"",oz:"",h:"红海酒店·三餐全包",
+  city:"赫尔格达位于埃及红海西岸，是红海省首府。这里原是1905年阿巴布达渔民建立的小渔村，20世纪80年代起转型为国际度假胜地。绵延36公里的海岸线、终年温暖的气候、世界级的珊瑚礁和清澈海水，使其成为欧洲人最爱的冬季度假地之一。",
+  hist:"【红海】因海水中大量红色藻类季节性繁殖而得名，也是摩西分海的传说之地。红海海水透明度极高，能见度可达30-50米，拥有超过1200种鱼类，其中10%为红海独有。吉夫顿群岛海洋保护区是浮潜和深潜的天堂，珊瑚墙垂直落差数百米。骑马项目可沿着沙漠海岸线行走，体验一半沙漠一半海的奇景。"},
+ {d:"08-06",w:"周四",loc:"赫尔格达",acts:["追海豚","红海浮潜","游艇午餐","自由安排"],nt:[],oc:"",oz:"",h:"红海酒店·三餐全包",
+  city:"赫尔格达第二天继续探索红海的蓝色世界。这里的海豚湾是全球少数可以与野生海豚共游的地点之一，红海的珊瑚礁生态系统被认为是印度洋最健康的珊瑚群之一。",
+  hist:"【追海豚】前往Shaab El Erg礁石区，这里常有大群野生旋转海豚栖息，幸运时可与它们共游。【红海浮潜】吉夫顿群岛周边的珊瑚花园种类繁多，能看到小丑鱼、狮子鱼、海龟等。【游艇午餐】红海游艇巡游通常包含自助午餐，在碧蓝海面上用餐别有风味。"},
+ {d:"08-07",w:"周五",loc:"卢克索",acts:["红海度假时光","前往卢克索","入住酒店","尼罗河风帆船"],nt:["早上时间拍拍照"],oc:"",oz:"",h:"卢克索酒店",
+  city:"卢克索古称”底比斯”，是古埃及中王国和新王国时期（约公元前2040-前1085年）的首都，荷马史诗中称为”百门之城”。尼罗河穿城而过，东岸是”生者之城”——神庙林立；西岸是”死者之城”——帝王谷与王后谷。这里是地球上露天古迹最密集的地方，被称为”世界上最大的露天博物馆”。",
+  hist:"【尼罗河风帆船】费卢卡是尼罗河上传统的三角帆船，已有数千年历史，靠风力无声滑行，是欣赏卢克索日落的经典方式。从河面上远眺西岸的帝王谷山谷和哈特谢普苏特神庙，感受古埃及人将生者与死者分隔在尼罗河两岸的宇宙观。"},
+ {d:"08-08",w:"周六",loc:"卢克索",acts:["帝王谷","门农神像","卡纳克神庙","前往开罗"],nt:["含3个门票"],oc:"",oz:"",h:"开罗酒店",
+  city:"卢克索的第二日深入探访古埃及新王国时期最核心的遗迹。尼罗河西岸的帝王谷安葬了图坦卡蒙、拉美西斯六世等64位法老；东岸的卡纳克神庙是古埃及规模最大的宗教建筑群，历经两千年营建。",
+  hist:"【帝王谷】深藏于西岸山谷中，自第十八王朝图特摩斯一世起成为法老陵墓所在地，目前已发现64座陵墓。墓室深达数百米，墙壁和天花板上布满《亡灵书》《地狱之书》等彩绘浮雕，历经三千多年仍色彩鲜艳。图坦卡蒙墓1922年被霍华德·卡特发现，是唯一未被盗掘的法老墓。【门农巨像】原是阿蒙霍特普三世神庙前的两座18米高坐像，因风化在古代会发出”歌声”而被希腊人附会为特洛伊英雄门农在呼唤母亲，神庙本身已荡然无存。【卡纳克神庙】占地80公顷，历经约2000年不断增建，核心是多柱大厅，134根高达23米的石柱如石林般耸立，每根柱子上都刻满浮雕和象形文字，是古埃及最宏伟的建筑奇迹。"},
+ {d:"08-09",w:"周日",loc:"马特鲁",acts:["开罗出发","ageeba海滨公路","lagouna白沙滩","马特鲁之眼"],nt:["车程6小时"],oc:"",oz:"",h:"马特鲁酒店",
+  city:"马特鲁港位于埃及西北部地中海沿岸，距利比亚边境约200公里。这里海水蓝得不真实，被称作”马特鲁蓝”，因游客稀少而保留了原始的度假感。二战期间这里曾是隆美尔非洲军团的补给港，至今仍有德军暗堡遗址。",
+  hist:"【Ageeba Beach】位于马特鲁以西28公里，”Agiba”在阿拉伯语中意为”奇迹”，藏在两座白色悬崖之间的隐秘海湾，海水呈现由浅绿到深蓝的渐变色，需沿悬崖阶梯下到沙滩。【Lagouna Beach】一半纯白沙滩一半碧蓝海水，被誉为马特鲁最美海滩，水浅浪平适合游泳。【马特鲁之眼 Sea Eye】一块天然形成的圆形岩石池，海水透过孔洞涌入形成湛蓝的”眼睛”，是网红打卡点。"},
+ {d:"08-10",w:"周一",loc:"亚历山大",acts:["马特鲁退房","凯特贝古堡","回开罗大购物"],nt:["车程3.5小时"],oc:"",oz:"",h:"开罗酒店",
+  city:"亚历山大是埃及第二大城市、最大的海港，由亚历山大大帝于公元前331年建立。托勒密王朝时期这里是地中海最辉煌的文化中心，拥有古代世界最大的图书馆和七大奇迹之一的亚历山大灯塔。如今它是地中海岸的夏都，希腊罗马遗迹与阿拉伯风情并存。",
+  hist:"【凯特贝古堡】建于1480年马穆鲁克王朝凯特贝苏丹时期，矗立在古代世界七大奇迹之一——亚历山大灯塔的原址上。灯塔约建于公元前280年，高约110-130米，是当时世界上最高的人造建筑之一，因三次地震于14世纪彻底坍塌。建城堡时直接使用了灯塔废墟的玫瑰色花岗岩石块。现城堡内设有航海博物馆，收藏有从海底打捞的托勒密时期雕像和石柱。"},
+ {d:"08-11",w:"周二",loc:"开罗离开",acts:["最晚2点退房","飞伊斯坦布尔"],nt:["办理小红卡是必要的","熟悉公共交通"],oc:"",oz:"",h:"伊斯坦布尔酒店",
+  city:"结束埃及行程，从开罗机场飞往土耳其伊斯坦布尔。两段文明之旅在此交接：从法老的国度飞向拜占庭与新奥斯曼的都城。",
+  hist:""},
+];
+const T=[
+ {d:"08-11",w:"周二",loc:"伊斯坦布尔",acts:["航班","独立大街","加拉太塔","苏莱曼尼耶清真寺","大巴扎","蓝色清真寺"],nt:["办理小红卡是必要的","熟悉公共交通"],oc:"",oz:"",h:"伊斯坦布尔酒店",
+  city:"伊斯坦布尔是世界上唯一横跨两大洲的城市，博斯普鲁斯海峡将其分为欧亚两岸。作为君士坦丁堡，它曾是拜占庭帝国首都长达千年；1453年被奥斯曼苏丹穆罕默德二世征服后，又成为奥斯曼帝国首都近500年。罗马竞技场、拜占庭教堂、奥斯曼清真寺层叠交织，使它成为一座”层叠之城”。",
+  hist:"【独立大街】伊斯坦布尔最繁华的步行街，长约1.4公里，始于加拉太塔附近，终于塔克西姆广场。红色复古有轨电车叮当穿行，两旁是19世纪的欧式建筑。【加拉太塔】热那亚人于1348年建造，高62米，曾用作监狱和天文台，登顶可360度俯瞰金角湾与老城。【苏莱曼尼耶清真寺】奥斯曼建筑大师锡南的杰作，1557年为苏莱曼大帝而建，穹顶直径26米，是伊斯坦布尔最壮观的清真寺之一。【大巴扎】始建于1461年，是世界上现存最古老、最大的有顶集市之一，有61条街道、4000余家店铺。【蓝色清真寺】1609年艾哈迈德一世下令建造，因内墙两万块伊兹尼克蓝瓷砖得名，是唯一拥有六座宣礼塔的清真寺。"},
+ {d:"08-12",w:"周三",loc:"伊斯坦布尔",acts:["圣索菲亚大教堂","地下水宫","渡轮看日落"],nt:["虽然门票有点贵（200➕）但要去"],oc:"",oz:"",h:"伊斯坦布尔酒店",
+  city:"深入探访伊斯坦布尔老城区的核心—— Sultanahmet 广场周边，这里集中了三处世界文化遗产级别的建筑：圣索菲亚大教堂、蓝色清真寺和地下水宫，三者彼此相距不过数百米，却跨越了拜占庭与奥斯曼两种文明。",
+  hist:"【圣索菲亚大教堂】公元537年由拜占庭皇帝查士丁尼一世建造，穹顶高55.6米、直径31米，曾是世界最大的教堂近千年。1453年奥斯曼征服后被改为清真寺，1934年改为博物馆，2020年再次成为清真寺。其穹顶被誉为”悬挂在金链上的建筑奇迹”，内部保留着拜占庭马赛克镶嵌画和伊斯兰书法圆盘。【地下水宫】查士丁尼建于公元532年，为皇宫储水之用，长140米、宽70米，由336根科林斯式石柱支撑，可储水8万吨，其中两根柱基是倒置的美杜莎头雕像，来历至今成谜。"},
+ {d:"08-13",w:"周四",loc:"伊斯坦布尔",acts:["轮渡亚洲区","彩色街区","少女塔","博斯普鲁斯观景台"],nt:["50里拉，大概20分钟"],oc:"",oz:"",h:"伊斯坦布尔酒店",
+  city:"第三日跨越博斯普鲁斯海峡，探访伊斯坦布尔的亚洲一侧。这座城市的独特之处在于它同时属于欧洲和亚洲，渡轮是两岸通勤的传统方式。卡德柯伊街区色彩斑斓、年轻文艺，是体验”亚洲侧”生活气息的好去处。",
+  hist:"【轮渡亚洲区】伊斯坦布尔渡轮已有150年历史，从 Eminönü 码头出发横渡博斯普鲁斯海峡约20分钟抵达卡德柯伊，海上可同时看到托普卡帕宫、少女塔和两岸的耶尼清真寺。【彩色街区】卡德柯伊的 Moda 街区以彩色房屋和咖啡馆闻名，是本地年轻人聚集地，与老城的肃穆形成鲜明对比。【少女塔 Kız Kulesi】建于博斯普鲁斯海峡中的一座小礁石上，最早可追溯至拜占庭时期，曾用作灯塔、海关、隔离所，现为餐厅，传说一位苏丹为保护女儿而建塔却仍未能逃脱预言。【博斯普鲁斯观景台】从亚洲侧的 Üsküdar 海岸可欣赏到欧洲侧老城的天际线，日落时分金色阳光洒在清真寺穹顶上，是伊斯坦布尔最经典的明信片视角。"},
+ {d:"08-14",w:"周五",loc:"卡帕多奇亚",acts:["飞卡帕","接机入住","格雷梅citywalk","sunset point落日"],nt:["伊斯坦布尔机场很大，至少提前两个小时到","如果是住塔克西姆广场坐机场大巴，会堵车，要早点"],oc:"",oz:"",h:"格雷梅洞穴酒店",
+  city:"卡帕多奇亚位于土耳其中部安纳托利亚高原，以火山凝灰岩风化形成的喀斯特地貌闻名，被称为”地球上最像月球的地方”。数百万年前三座火山喷发，火山灰经风化形成蘑菇石、仙女烟囱等奇景。公元4世纪起，早期基督徒为躲避罗马迫害在此开凿岩窟教堂和地下城，现存数百座。格雷梅露天博物馆是世界文化遗产。",
+  hist:"【格雷梅 Citywalk】格雷梅是卡帕多奇亚的核心小镇，街道两旁的酒店多是改建的岩窟洞穴房。小镇四周被仙女烟囱和山谷环绕，步行即可到达玫瑰谷、红色谷入口。【Sunset Point 落日观景台】位于格雷梅北郊的小山坡，是观赏红谷日落的最佳地点，夕阳将整片山谷染成金红色，气球归航时尤为梦幻。"},
+ {d:"08-15",w:"周六",loc:"卡帕多奇亚",acts:["5:00热气球/追气球"],nt:[],oc:"",oz:"",h:"格雷梅洞穴酒店",
+  city:"卡帕多奇亚的清晨属于热气球。这里被公认为全球最适合乘坐热气球的地方——独特的喀斯特地貌在晨光中如外星表面，数百只气球同时升空的场面震撼无比。每年有超过50万游客为这一刻而来。",
+  hist:"【热气球飞行】清晨5点出发，气球在日出前点火升空，飞行约1小时，高度可达1000米，俯瞰格雷梅、爱情谷、鸽子谷等全景，数百只气球同飞的场面震撼人心。降落时有传统香槟庆祝仪式。卡帕多奇亚每年有约300天适合飞行，是全球热气球飞行最密集的地区。【追气球】若不乘坐，也可在各观景台或酒店露台观看气球群升起，最佳时间是日出前15分钟到日出后30分钟，爱情谷和日落观景台是经典机位。"},
+ {d:"08-16",w:"周日",loc:"卡帕→返程",acts:["8:25飞伊斯坦布尔","花13:20航班","芳15:50航班"],nt:[],oc:"",oz:"",h:"—",
+  city:"",
+  hist:""},
+ {d:"08-17",w:"周一",loc:"北京/广州",acts:["抵达国内"],nt:[],oc:"",oz:"",h:"—",
+  city:"",hist:""},
+];
+
+function prev(d){return `<div class="ofprev"><div class="c"><b>👗小陈</b>${d.oc||'待填'}</div><div class="z"><b>👚小智</b>${d.oz||'待填'}</div></div>`}
+function renderDays(arr,id,cls){
+ document.getElementById(id).innerHTML=arr.map((d,di)=>`
+  <div class="dc ${cls}" data-arr="${cls}" data-di="${di}">
+    <div class="top"><div class="dt">${d.d}<span>${d.w}</span></div><span class="loc">${d.loc}</span></div>
+    <ul>${d.acts.slice(0,4).map(a=>`<li>${a}</li>`).join('')}${d.acts.length>4?`<li>+${d.acts.length-4}项…</li>`:''}</ul>
+    ${prev(d)}
+    <div class="openhint">✏️ 点击看城市介绍/历史</div>
+  </div>`).join('');
+}
+renderDays(E,'egyptDays','eg');
+renderDays(T,'turkeyDays','tk');
+
+const modalBg=document.getElementById('modalBg'),mTitle=document.getElementById('mTitle'),mBody=document.getElementById('mBody');
+function openModal(cls,di){
+  const arr=cls==='eg'?E:T, d=arr[di];
+  mTitle.textContent=`${d.d} ${d.w} · ${d.loc}`;
+  mBody.innerHTML=`
+    <div class="mb-label" style="color:var(--green-d)">🌸 今日行程</div>
+    <div class="acts-block" id="mActs"></div>
+    <button class="nt-add" id="mActsAdd">+ 添加行程项</button>
+    ${d.h&&d.h!=='—'?`<p style="margin-top:11px;font-size:.78rem;color:var(--muted)">🏨 ${d.h}</p>`:''}
+    <div class="mb-label">📝 备注</div>
+    <div class="nt-block" id="mNt"></div>
+    <button class="nt-add" id="mNtAdd">+ 添加一条备注</button>
+    <div class="mb-label" style="color:var(--green-d)">🏙️ 城市介绍</div>
+    <textarea class="mb-input city" placeholder="写这座城市的特点、交通、美食…">${d.city||''}</textarea>
+    <div class="mb-label" style="color:var(--purple)">📜 景点历史</div>
+    <textarea class="mb-input hist" placeholder="写今天景点的历史背景、故事…">${d.hist||''}</textarea>
+    <div class="mb-label c">👗 小陈的服装</div>
+    <textarea class="mb-input oc" placeholder="写小陈这天的穿搭…">${d.oc||''}</textarea>
+    <div class="mb-label z">👚 小智的服装</div>
+    <textarea class="mb-input oz" placeholder="写小智这天的穿搭…">${d.oz||''}</textarea>
+  `;
+  renderModalActs(d,cls,di);
+  renderModalNotes(d);
+  mBody.querySelector('.oc').addEventListener('input',e=>d.oc=e.target.value);
+  mBody.querySelector('.oz').addEventListener('input',e=>d.oz=e.target.value);
+  mBody.querySelector('.city').addEventListener('input',e=>d.city=e.target.value);
+  mBody.querySelector('.hist').addEventListener('input',e=>d.hist=e.target.value);
+  mBody.querySelector('#mActsAdd').addEventListener('click',()=>{
+    const v=prompt('输入行程项（如：参观XX景点）：');
+    if(v&&v.trim()){ (d.acts=d.acts||[]).push(v.trim()); renderModalActs(d,cls,di); refreshCardActs(cls,di); }
+  });
+  mBody.querySelector('#mNtAdd').addEventListener('click',()=>{
+    const v=prompt('输入备注内容：');
+    if(v&&v.trim()){ (d.nt=d.nt||[]).push(v.trim()); renderModalNotes(d); refreshPrev(cls,di); }
+  });
+  modalBg.classList.add('show');
+  modalBg.dataset.cls=cls; modalBg.dataset.di=di;
+}
+function renderModalActs(d,cls,di){
+  const el=document.getElementById('mActs');
+  if(!el) return;
+  el.innerHTML=(d.acts||[]).map((a,ai)=>`
+    <div class="nt-item"><span>${a}</span><button data-ai="${ai}">×</button></div>`).join('')||'<p style="font-size:.74rem;color:var(--dim)">暂无行程</p>';
+  el.querySelectorAll('.nt-item button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      d.acts.splice(+b.dataset.ai,1); renderModalActs(d,cls,di); refreshCardActs(cls,di);
+    });
+  });
+}
+function refreshCardActs(cls,di){
+  const arr=cls==='eg'?E:T, id=cls==='eg'?'egyptDays':'turkeyDays';
+  const card=document.querySelector(`#${id} .dc[data-di="${di}"]`);
+  if(card){ const ul=card.querySelector('ul'); if(ul){ const d=arr[di]; ul.innerHTML=d.acts.slice(0,4).map(a=>`<li>${a}</li>`).join('')+(d.acts.length>4?`<li>+${d.acts.length-4}项…</li>`:''); } }
+}
+function renderModalNotes(d){
+  document.getElementById('mNt').innerHTML=(d.nt||[]).map((n,ni)=>`
+    <div class="nt-item"><span>${n}</span><button data-ni="${ni}">×</button></div>`).join('')||'<p style="font-size:.74rem;color:var(--dim)">暂无备注</p>';
+  document.querySelectorAll('#mNt .nt-item button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      (d.nt||[]).splice(+b.dataset.ni,1); renderModalNotes(d); refreshPrev(modalBg.dataset.cls,+modalBg.dataset.di);
+    });
+  });
+}
+function refreshPrev(cls,di){
+  const arr=cls==='eg'?E:T, id=cls==='eg'?'egyptDays':'turkeyDays';
+  const card=document.querySelector(`#${id} .dc[data-di="${di}"]`);
+  if(card){ card.querySelector('.ofprev').outerHTML=prev(arr[di]); }
+}
+document.querySelectorAll('.hscroll').forEach(s=>{
+  s.addEventListener('click',e=>{
+    const card=e.target.closest('.dc'); if(!card) return;
+    openModal(card.dataset.arr,+card.dataset.di);
+  });
+});
+document.getElementById('mClose').addEventListener('click',()=>modalBg.classList.remove('show'));
+modalBg.addEventListener('click',e=>{if(e.target===modalBg)modalBg.classList.remove('show');});
+
+// ===== 物品清单 =====
+const chen=[
+ ["护照",1,"EE0941314"],["身份证",0,""],["美金200",0,""],["欧元100",0,""],
+ ["visa卡",1,"限额度"],["钱包",1,""],["充电宝",1,"3C"],["小风扇",1,""],
+ ["转换头",1,"欧标"],["泳衣",1,"两套"],["浮潜衣",1,""],["隐形",1,""],
+ ["防晒",1,"蓝胖子"],["防晒衣",1,""],["相机",1,""],["大疆",1,""],
+ ["牙刷牙膏",1,""],["拖鞋",1,""],["墨镜",1,""],["帽子",1,""],
+ ["耳机",1,""],["笔",1,""],["保温杯",1,""],["遮阳伞",1,""],
+ ["运动鞋",1,""],["卡针",1,""],["口罩",1,""],["护手霜",1,""],
+ ["面膜",1,""],["维C",1,""],["水母服",1,""],["防水袋",1,""],
+ ["浴巾",1,""],["驱蚊",1,""],["一次性内裤",1,""],["流量卡",1,""],
+ ["洗手液",1,""],["折叠袋",1,""],["电脑",1,""],["降温贴",1,""],
+ ["塑料袋",1,""],["护颈枕",1,""],["卫生巾",1,""],["手机绳",1,""],
+ ["洗护",1,""],["防盗腰包",1,""],["刷卡套",1,""],["八字扣",1,""],
+ ["防盗内裤",1,""],["手机绳2",1,""],["斜挎包",1,""],
+].map(a=>({n:a[0],d:a[1],t:a[2]}));
+const zhi=[
+ ["护照",0,"EC3088481"],["身份证",1,""],["美金200",0,""],["欧元100",0,""],
+ ["当地货币",0,""],["保险",0,""],["充电宝",1,""],["小风扇",1,""],
+ ["转换头",1,"三合一"],["隐形",1,""],["防晒",1,""],["遮阳伞",1,""],
+ ["运动鞋",1,""],["防水袋",1,""],["浴巾",1,"迪卡侬"],["流量卡",1,""],
+ ["折叠袋",1,""],["降温湿巾",1,""],["护颈枕",1,""],["卫生巾",1,""],
+ ["手机绳",1,""],["护发",1,""],["防盗内裤",1,""],["手机绳2",1,""],
+].map(a=>({n:a[0],d:a[1],t:a[2]}));
+
+function renderL(arr,id){
+ document.getElementById(id).innerHTML=arr.map((it,i)=>`
+  <div class="pi ${it.d?'done':''}" data-i="${i}">
+    <div class="cb"></div>
+    <div style="flex:1"><div class="nm">${it.n}</div>${it.t?`<div class="nt">${it.t}</div>`:''}</div>
+    <button class="it-del" data-i="${i}" title="删除">×</button>
+  </div>`).join('');
+}
+renderL(chen,'cl');renderL(zhi,'zl');
+function updPack(){
+ const cd=chen.filter(i=>i.d).length,zd=zhi.filter(i=>i.d).length;
+ document.getElementById('cp').textContent=Math.round(cd/chen.length*100)+'%';
+ document.getElementById('zp').textContent=Math.round(zd/zhi.length*100)+'%';
+ document.getElementById('cb').style.width=cd/chen.length*100+'%';
+ document.getElementById('zb').style.width=zd/zhi.length*100+'%';
+}
+updPack();
+function bindPack(listEl,arr,listId){
+ listEl.addEventListener('click',e=>{
+  const del=e.target.closest('.it-del');
+  if(del){ arr.splice(+del.dataset.i,1); renderL(arr,listId); updPack(); return; }
+  const pi=e.target.closest('.pi'); if(!pi) return;
+  const i=+pi.dataset.i;
+  arr[i].d=!arr[i].d; pi.classList.toggle('done'); updPack();
+ });
+}
+bindPack(document.getElementById('cl'),chen,'cl');
+bindPack(document.getElementById('zl'),zhi,'zl');
+window.addChen=function(){
+ const n=prompt('添加小陈的物品：'); if(!n||!n.trim())return;
+ chen.push({n:n.trim(),d:false,t:''}); renderL(chen,'cl'); updPack();
+};
+window.addZhi=function(){
+ const n=prompt('添加小智的物品：'); if(!n||!n.trim())return;
+ zhi.push({n:n.trim(),d:false,t:''}); renderL(zhi,'zl'); updPack();
+};
+document.getElementById('addChen').addEventListener('click',window.addChen);
+document.getElementById('addZhi').addEventListener('click',window.addZhi);
+
+// ===== 经费（可添加） =====
+let exp=[
+ ["去程：开罗机票",2786,0,""],
+ ["回程：伊斯坦布尔机票",2931,0,""],
+ ["埃及团费：定金",1000,1000,""],
+ ["埃及团费：尾款",0,9999,""],
+ ["境外险",0,0,"待填"],
+ ["开罗-伊斯坦布尔机票",0,0,"待填"],
+ ["境外流量",0,0,"团送10G，不够买无忧行"],
+ ["衣服花费1",0,0,"待填"],["衣服花费2",0,0,"待填"],["衣服花费3",0,0,"待填"],
+];
+const eb=document.getElementById('eb');
+function renderExp(){
+ eb.innerHTML=exp.map((e,i)=>`
+  <tr>
+   <td><input value="${e[0]}" data-i="${i}" data-f="0"></td>
+   <td class="amt"><input type="number" value="${e[1]}" data-i="${i}" data-f="1"></td>
+   <td class="amt"><input type="number" value="${e[2]}" data-i="${i}" data-f="2"></td>
+   <td><input value="${e[3]}" data-i="${i}" data-f="3" style="font-size:.68rem;color:var(--muted)"></td>
+   <td><button class="it-del" data-i="${i}" style="background:var(--green-l);color:var(--green-d);border:none;width:20px;height:20px;border-radius:5px;cursor:pointer">×</button></td>
+  </tr>`).join('');
+ eb.querySelectorAll('input').forEach(inp=>{
+   inp.addEventListener('input',()=>{
+     const i=+inp.dataset.i,f=+inp.dataset.f;
+     exp[i][f]=f===0||f===3?inp.value:(parseFloat(inp.value)||0);
+     if(f===1||f===2)calc();
+   });
+ });
+ eb.querySelectorAll('.it-del').forEach(b=>{
+   b.addEventListener('click',()=>{ exp.splice(+b.dataset.i,1); renderExp(); });
+ });
+ calc();
+}
+function calc(){
+ let c=0,z=0;exp.forEach(e=>{c+=e[1]||0;z+=e[2]||0;});
+ document.getElementById('cs').textContent=c.toLocaleString();
+ document.getElementById('zs').textContent=z.toLocaleString();
+ document.getElementById('gs').textContent=(c+z).toLocaleString();
+}
+renderExp();
+window.addExp=function(){
+ const n=prompt('支出项目名称：'); if(!n||!n.trim())return;
+ exp.push([n.trim(),0,0,'']); renderExp();
+};
+document.getElementById('addExp').addEventListener('click',window.addExp);
+
+// ===== 汇率（实时获取） =====
+let R={CNY:1,USD:0.139,EUR:0.129,EGP:7.49,TRY:6.97};
+const S={CNY:'¥',USD:'$',EUR:'€',EGP:'£',TRY:'₺'},
+      N={CNY:'人民币',USD:'美元',EUR:'欧元',EGP:'埃及镑',TRY:'土耳其里拉'};
+function conv(){
+ const a=parseFloat(document.getElementById('amt').value)||0;
+ const f=document.getElementById('from').value,t=document.getElementById('to').value;
+ const r=a/R[f]*R[t];
+ document.getElementById('res').textContent=r.toLocaleString('zh-CN',{maximumFractionDigits:2})+S[t];
+ document.getElementById('pair').textContent=`${a} ${N[f]} = ${r.toLocaleString('zh-CN',{maximumFractionDigits:2})} ${N[t]}`;
+}
+conv();
+document.getElementById('amt').addEventListener('input',conv);
+document.getElementById('from').addEventListener('change',conv);
+document.getElementById('to').addEventListener('change',conv);
+document.getElementById('sw').addEventListener('click',()=>{const f=document.getElementById('from'),t=document.getElementById('to');[f.value,t.value]=[t.value,f.value];conv();});
+function renderRG(){
+ document.getElementById('rg').innerHTML=[
+  [`100 埃镑`,`≈ ${(100/R.EGP*R.CNY).toFixed(1)} 元`],[`100 里拉`,`≈ ${(100/R.TRY*R.CNY).toFixed(1)} 元`],
+  [`100 美元`,`≈ ${(100/R.USD*R.CNY).toFixed(0)} 元`],[`100 欧元`,`≈ ${(100/R.EUR*R.CNY).toFixed(0)} 元`],
+  [`1 元`,`≈ ${(R.EGP).toFixed(2)} 埃镑`],[`1 元`,`≈ ${(R.TRY).toFixed(2)} 里拉`],
+].map(r=>`<div class="rc"><div class="r">${r[0]}</div><div class="pa">= ${r[1]}</div></div>`).join('');
+}
+renderRG();
+// 实时获取汇率
+async function fetchRates(){
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/USD');
+    const j=await r.json();
+    if(j&&j.rates){
+      const usdCny=j.rates.CNY||7.18;
+      // 转换为以CNY为基准：R.XXX = 1人民币 = 多少XXX货币
+      R.CNY=1;
+      R.USD=1/usdCny;              // 1人民币 = 多少美元
+      R.EUR=j.rates.EUR/usdCny;    // 1人民币 = 多少欧元
+      R.EGP=j.rates.EGP/usdCny;    // 1人民币 = 多少埃镑
+      R.TRY=j.rates.TRY/usdCny;    // 1人民币 = 多少里拉
+      conv(); renderRG();
+      const updateTime=new Date().toLocaleDateString('zh-CN');
+      document.querySelector('#converter .ss').textContent=`人民币/美元/欧元/埃镑/里拉 · 实时汇率 · 更新于${updateTime}`;
+      console.log('✓ 汇率已更新');
+    }
+  }catch(e){ console.log('汇率获取失败，使用默认值'); }
+}
+fetchRates();
+// 每6小时更新一次
+setInterval(fetchRates, 6*60*60*1000);
+
+// ===== 注意事项（可管理） =====
+let tipsData=[
+ ["撸猫 pixpix","土耳其撸猫用 pixpix"],["羊毛皂","100-300里拉"],
+ ["交通卡有坑","提前了解"],["现金分散","护照第一"],
+ ["浮潜防晒","水母服"],["教堂着装","带丝巾"],
+ ["哈利利砍价","大砍价"],["防盗刷","限每日额度"],
+ ["行李15kg","注意分装"],["充电宝3C","10000内"],
+];
+function renderTips(){
+ document.getElementById('tipsList').innerHTML=tipsData.map((t,i)=>`
+  <div class="tip">
+    <div class="t">${t[0]}</div>
+    <div class="d">${t[1]}</div>
+    <button class="del" onclick="delTip(${i})">🗑 删除</button>
+  </div>`).join('');
+}
+function delTip(i){ tipsData.splice(i,1); renderTips(); }
+renderTips();
+window.addTip=function(){
+ const title=prompt('请输入注意事项标题：'); if(!title||!title.trim()) return;
+ const desc=prompt('请输入注意事项内容（可留空）：');
+ tipsData.push([title.trim(),(desc||'').trim()]);
+ renderTips();
+};
+window.delTip=delTip;
+
+// ===== 设置弹窗（主题风格） =====
+const setBg=document.getElementById('setBg');
+const openSettings=document.getElementById('openSettings');
+function openSet(e){e.preventDefault();e.stopPropagation();setBg.classList.add('show');}
+openSettings.addEventListener('click',openSet);
+openSettings.addEventListener('touchend',openSet);
+document.getElementById('setClose').addEventListener('click',()=>setBg.classList.remove('show'));
+setBg.addEventListener('click',e=>{if(e.target===setBg)setBg.classList.remove('show');});
+function setTheme(t){
+ document.documentElement.setAttribute('data-theme',t);
+ document.querySelectorAll('.set-theme').forEach(x=>x.classList.toggle('on',x.dataset.theme===t));
+ localStorage.setItem('tripTheme',t);
+}
+// 暴露给 onclick
+window.setTheme=setTheme;
+document.querySelectorAll('.set-theme').forEach(x=>{
+ x.addEventListener('click',()=>setTheme(x.dataset.theme));
+});
+const saved=localStorage.getItem('tripTheme');
+if(saved) setTheme(saved);
+
+// ===== 导航高亮 =====
+const sItems=[...document.querySelectorAll('.menu-item[href^="#"]:not(#openSettings)')];
+const secs=[...document.querySelectorAll('.sec')];
+window.addEventListener('scroll',()=>{
+ let cur='overview';
+ secs.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id;});
+ sItems.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+
+// ===== 翻译器 =====
+function trSwap(){
+  const f=document.getElementById('trFrom'),t=document.getElementById('trTo');
+  const tmp=f.value; f.value=t.value; t.value=tmp;
+}
+let trTimer;
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp=document.getElementById('trInput');
+  if(inp){ inp.addEventListener('input',()=>{ clearTimeout(trTimer); trTimer=setTimeout(doTranslate,800); }); }
+});
+async function doTranslate(){
+  const txt=document.getElementById('trInput').value.trim();
+  if(!txt){ document.getElementById('trResult').innerHTML='翻译结果会显示在这里…'; return; }
+  const from=document.getElementById('trFrom').value;
+  const to=document.getElementById('trTo').value;
+  document.getElementById('trResult').textContent='翻译中…';
+  try{
+    // 通过后端代理翻译（避免手机端无法访问Google）
+    const url=`/api/tr?q=${encodeURIComponent(txt)}&sl=${from}&tl=${to}`;
+    const r=await fetch(url);
+    const j=await r.json();
+    let result='';
+    if(j&&j[0]){ j[0].forEach(s=>{if(s[0])result+=s[0];}); }
+    if(result){
+      const speakBtn=`<button onclick="speakTr('${to}')" style="float:right;border:none;background:var(--green-l);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:.75rem;margin-left:8px">🔊 读</button>`;
+      document.getElementById('trResult').innerHTML=speakBtn+'<span>'+result+'</span>';
+    }else{
+      document.getElementById('trResult').textContent='翻译失败，请重试';
+    }
+  }catch(e){
+    document.getElementById('trResult').textContent='翻译失败，请检查网络';
+  }
+}
+function speakTr(lang){
+  // 通过后端代理获取Google TTS音频，直接播放MP3
+  const span=document.querySelector('#trResult span');
+  const text=span?span.textContent:'';
+  if(!text) return;
+  // 先停掉之前正在播放的音频
+  let old=document.getElementById('trAudio');
+  if(old){ old.pause(); old.remove(); }
+  // 创建音频播放
+  const audio=document.createElement('audio');
+  audio.id='trAudio';
+  audio.setAttribute('controls','');
+  audio.style.cssText='width:100%;margin-top:8px;border-radius:8px';
+  audio.src=`/api/tts?q=${encodeURIComponent(text)}&tl=${lang}`;
+  document.getElementById('trResult').appendChild(audio);
+  audio.play().catch(()=>{});
+}
+function quickTr(text,from,to){
+  document.getElementById('trInput').value=text;
+  document.getElementById('trFrom').value=from;
+  document.getElementById('trTo').value=to;
+  doTranslate();
+}
+window.doTranslate=doTranslate; window.trSwap=trSwap; window.quickTr=quickTr; window.speakTr=speakTr;
+
+// ===== 离线存储 + 云端同步 + 导出导入 =====
+const STORAGE_KEY='trip_data_v1';
+// 收集所有数据
+function collectData(){
+  return {
+    E:E.map(d=>({oc:d.oc,oz:d.oz,city:d.city,hist:d.hist,nt:d.nt,acts:[...d.acts]})),
+    T:T.map(d=>({oc:d.oc,oz:d.oz,city:d.city,hist:d.hist,nt:d.nt,acts:[...d.acts]})),
+    tips:tipsData.map(t=>[...t]),
+    exp:exp.map(e=>[...e]),
+    chen:chen.map(c=>({n:c.n,d:c.d,t:c.t})),
+    zhi:zhi.map(z=>({n:z.n,d:z.d,t:z.t})),
+    ts:Date.now()
+  };
+}
+// 应用数据
+function applyData(d){
+  if(!d) return;
+  if(d.E){
+    E.forEach((day,i)=>{
+      if(d.E[i]){
+        const src=d.E[i];
+        if(src.oc!==undefined) day.oc=src.oc;
+        if(src.oz!==undefined) day.oz=src.oz;
+        if(src.city!==undefined) day.city=src.city;
+        if(src.hist!==undefined) day.hist=src.hist;
+        if(src.nt!==undefined&&src.nt!==null) day.nt=src.nt;
+        if(src.acts!==undefined&&src.acts!==null) day.acts=[...src.acts];
+      }
+    });
+    renderDays(E,'egyptDays','eg');
+  }
+  if(d.T){
+    T.forEach((day,i)=>{
+      if(d.T[i]){
+        const src=d.T[i];
+        if(src.oc!==undefined) day.oc=src.oc;
+        if(src.oz!==undefined) day.oz=src.oz;
+        if(src.city!==undefined) day.city=src.city;
+        if(src.hist!==undefined) day.hist=src.hist;
+        if(src.nt!==undefined&&src.nt!==null) day.nt=src.nt;
+        if(src.acts!==undefined&&src.acts!==null) day.acts=[...src.acts];
+      }
+    });
+    renderDays(T,'turkeyDays','tk');
+  }
+  if(d.tips){ tipsData.length=0; d.tips.forEach(t=>tipsData.push([...t])); renderTips(); }
+  if(d.exp){ exp.length=0; d.exp.forEach(e=>exp.push([...e])); renderExp(); }
+  if(d.chen){ chen.length=0; d.chen.forEach(c=>chen.push({n:c.n,d:c.d,t:c.t})); renderPack(); }
+  if(d.zhi){ zhi.length=0; d.zhi.forEach(z=>zhi.push({n:z.n,d:z.d,t:z.t})); renderPack(); }
+}
+// 保存到本地
+function saveLocal(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(collectData())); }catch(e){} }
+// 从本地加载
+function loadLocal(){ try{ const s=localStorage.getItem(STORAGE_KEY); return s?JSON.parse(s):null; }catch(e){ return null; } }
+// 云端加载
+async function cloudLoad(){
+  try{
+    const r=await fetch('/api/data');
+    if(!r.ok) return null;
+    const j=await r.json();
+    return j.data;
+  }catch(e){ return null; }
+}
+// 云端保存
+async function cloudSave(data){
+  try{
+    await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  }catch(e){}
+}
+// 自动保存（防抖）
+let saveTimer;
+function autoSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{ saveLocal(); cloudSave(collectData()); },2000);
+}
+// 监听变化
+document.addEventListener('input',autoSave);
+document.addEventListener('click',function(e){
+  if(e.target.classList.contains('del')||e.target.classList.contains('btn-add')||e.target.classList.contains('nt-add')){
+    setTimeout(autoSave,100);
+  }
+});
+// 导出数据为文件
+function exportData(){
+  const data=JSON.stringify(collectData(),null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='旅行数据_'+new Date().toLocaleDateString('zh-CN').replace(/\//g,'')+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+// 导入数据
+function importData(file){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      applyData(data);
+      saveLocal();
+      cloudSave(data);
+      alert('✓ 数据导入成功！');
+    }catch(err){ alert('导入失败：文件格式错误'); }
+  };
+  reader.readAsText(file);
+}
+window.exportData=exportData; window.importData=importData; window.collectData=collectData; window.applyData=applyData; window.autoSave=autoSave;
+
+// 启动：先加载本地，再尝试云端
+(async()=>{
+  // 1. 先加载本地数据
+  const local=loadLocal();
+  if(local){ applyData(local); }
+  // 2. 尝试加载云端数据（如果在线）
+  const cloud=await cloudLoad();
+  if(cloud){
+    // 云端数据更新，用云端覆盖
+    if(!local || (cloud.ts||0) > (local.ts||0)){
+      applyData(cloud);
+      saveLocal();
+    }
+  }
+  // 3. 每30秒自动同步
+  setInterval(()=>{ saveLocal(); cloudSave(collectData()); },30000);
+  // 4. 每5分钟从云端拉取最新数据（小智的更新）
+  setInterval(async()=>{ const c=await cloudLoad(); if(c&&(c.ts||0)>(collectData().ts||0)){ applyData(c); saveLocal(); } },300000);
+})();
+</script>
+</body>
+</html>
