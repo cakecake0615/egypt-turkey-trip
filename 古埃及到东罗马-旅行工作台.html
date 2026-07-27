@@ -852,13 +852,15 @@ async function doTranslate(){
   const to=document.getElementById('trTo').value;
   document.getElementById('trResult').textContent='翻译中…';
   try{
-    // 通过后端代理翻译（避免手机端无法访问Google）
-    const url=`/api/tr?q=${encodeURIComponent(txt)}&sl=${from}&tl=${to}`;
+    // 用 MyMemory API（免费、支持CORS、国内可访问）
+    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(txt)}&langpair=${from}|${to}`;
     const r=await fetch(url);
     const j=await r.json();
     let result='';
-    if(j&&j[0]){ j[0].forEach(s=>{if(s[0])result+=s[0];}); }
-    if(result){
+    if(j&&j.responseData&&j.responseData.translatedText){
+      result=j.responseData.translatedText;
+    }
+    if(result && !result.includes('PLEASE SELECT')){
       const speakBtn=`<button onclick="speakTr('${to}')" style="float:right;border:none;background:var(--green-l);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:.75rem;margin-left:8px">🔊 读</button>`;
       document.getElementById('trResult').innerHTML=speakBtn+'<span>'+result+'</span>';
     }else{
@@ -869,21 +871,34 @@ async function doTranslate(){
   }
 }
 function speakTr(lang){
-  // 通过后端代理获取Google TTS音频，直接播放MP3
   const span=document.querySelector('#trResult span');
   const text=span?span.textContent:'';
   if(!text) return;
-  // 先停掉之前正在播放的音频
+  // 先尝试浏览器自带语音
+  if('speechSynthesis'in window){
+    const voices=speechSynthesis.getVoices();
+    const langCode=lang==='ar'?'ar':lang==='tr'?'tr':lang==='en'?'en':'zh';
+    const matchVoice=voices.find(v=>v.lang&&v.lang.startsWith(langCode));
+    if(matchVoice||voices.length>0){
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang=langCode==='ar'?'ar-SA':langCode==='tr'?'tr-TR':langCode==='en'?'en-US':'zh-CN';
+      u.rate=0.8;
+      if(matchVoice) u.voice=matchVoice;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+      return;
+    }
+  }
+  // 浏览器不支持该语言语音，用 Google TTS 音频链接
   let old=document.getElementById('trAudio');
-  if(old){ old.pause(); old.remove(); }
-  // 创建音频播放
+  if(old){ old.remove(); }
   const audio=document.createElement('audio');
   audio.id='trAudio';
   audio.setAttribute('controls','');
   audio.style.cssText='width:100%;margin-top:8px;border-radius:8px';
-  audio.src=`/api/tts?q=${encodeURIComponent(text)}&tl=${lang}`;
+  audio.src=`https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=${lang}&client=gtx&q=${encodeURIComponent(text)}`;
   document.getElementById('trResult').appendChild(audio);
-  audio.play().catch(()=>{});
+  audio.play().catch(()=>{ alert('语音播放需要联网，请检查网络连接'); });
 }
 function quickTr(text,from,to){
   document.getElementById('trInput').value=text;
