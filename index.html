@@ -1001,7 +1001,71 @@ function exportData(){
   a.click();
   URL.revokeObjectURL(url);
 }
-// 导入数据
+// 合并模式导入：只补充文件里的内容，保留手机上已有的数据，不整体替换
+function mergeData(d){
+  if(!d) return;
+  // 行程：按天更新字段（只覆盖文件里有值的字段，不影响其他天）
+  if(d.E){
+    E.forEach((day,i)=>{
+      const src=d.E[i];
+      if(!src) return;
+      if(src.oc!==undefined) day.oc=src.oc;
+      if(src.oz!==undefined) day.oz=src.oz;
+      if(src.city!==undefined) day.city=src.city;
+      if(src.hist!==undefined) day.hist=src.hist;
+      if(src.nt!==undefined&&src.nt!==null) day.nt=src.nt;
+      if(src.acts!==undefined&&src.acts!==null) day.acts=[...src.acts];
+    });
+    renderDays(E,'egyptDays','eg');
+  }
+  if(d.T){
+    T.forEach((day,i)=>{
+      const src=d.T[i];
+      if(!src) return;
+      if(src.oc!==undefined) day.oc=src.oc;
+      if(src.oz!==undefined) day.oz=src.oz;
+      if(src.city!==undefined) day.city=src.city;
+      if(src.hist!==undefined) day.hist=src.hist;
+      if(src.nt!==undefined&&src.nt!==null) day.nt=src.nt;
+      if(src.acts!==undefined&&src.acts!==null) day.acts=[...src.acts];
+    });
+    renderDays(T,'turkeyDays','tk');
+  }
+  // 注意事项：按内容合并，不重复
+  if(d.tips){
+    d.tips.forEach(t=>{
+      const exists=tipsData.some(o=>o[0]===t[0]&&o[1]===t[1]&&o[2]===t[2]);
+      if(!exists) tipsData.push([...t]);
+    });
+    renderTips();
+  }
+  // 花费：按内容合并
+  if(d.exp){
+    d.exp.forEach(e=>{
+      const exists=exp.some(o=>String(o)===String(e));
+      if(!exists) exp.push([...e]);
+    });
+    renderExp();
+  }
+  // 小陈物品：按名称合并
+  if(d.chen){
+    d.chen.forEach(c=>{
+      const exists=chen.some(o=>o.n===c.n);
+      if(!exists) chen.push({n:c.n,d:!!c.d,t:c.t||''});
+    });
+    renderL(chen,'cl');
+  }
+  // 小智物品：按名称合并
+  if(d.zhi){
+    d.zhi.forEach(z=>{
+      const exists=zhi.some(o=>o.n===z.n);
+      if(!exists) zhi.push({n:z.n,d:!!z.d,t:z.t||''});
+    });
+    renderL(zhi,'zl');
+  }
+  if(d.tips||d.exp||d.chen||d.zhi) updPack();
+}
+// 导入数据（合并模式）
 function importData(file){
   const reader=new FileReader();
   reader.onload=function(e){
@@ -1017,10 +1081,10 @@ function importData(file){
       if(!data || (!data.E && !data.T && !data.tips && !data.exp && !data.chen && !data.zhi)){
         throw new Error('文件内容不是旅行工作台数据');
       }
-      applyData(data);
+      mergeData(data);
       saveLocal();
-      cloudSave(data);
-      alert('✓ 数据导入成功！');
+      cloudSave(collectData());  // 保存合并后的完整数据，不覆盖云端其他内容
+      alert('✓ 数据已合并导入！你手机上原有的内容已保留');
     }catch(err){
       const preview=String(e.target.result).replace(/^\uFEFF/,'').trim().slice(0,80).replace(/\n/g,' ');
       alert('导入失败：'+err.message+'\n文件前80字符：'+preview);
