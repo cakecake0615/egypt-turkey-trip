@@ -411,6 +411,7 @@
             📥 导入数据
             <input type="file" accept=".json" style="display:none" onchange="importData(this.files[0])">
           </label>
+          <button class="btn-add" onclick="clearLocal()" style="flex:1;min-width:120px;padding:12px;font-size:.85rem;background:var(--pink-l)">🗑 清空本地</button>
         </div>
         <div style="font-size:.72rem;color:var(--muted);line-height:1.6;background:var(--green-l);border-radius:10px;padding:10px">
           💡 <b>使用说明</b><br>
@@ -1004,55 +1005,33 @@ function exportData(){
 // 合并模式导入：只补充文件里的内容，保留手机上已有的数据，不整体替换
 function mergeData(d){
   if(!d) return;
-  // 先清理现有数据中的重复项
+  // 先清理现有数据中的重复项（保留第一项）
   const seenExp=new Set();
-  const uniqExp=exp.filter(e=>{
-    const k=e[0];
-    if(seenExp.has(k)) return false;
-    seenExp.add(k);
-    return true;
-  });
-  exp.length=0;
-  uniqExp.forEach(e=>exp.push(e));
-
+  const uniqExp=exp.filter(e=>{ const k=e[0]; if(seenExp.has(k)) return false; seenExp.add(k); return true; });
+  exp.length=0; uniqExp.forEach(e=>exp.push(e));
   const seenChen=new Set();
-  const uniqChen=chen.filter(c=>{
-    if(seenChen.has(c.n)) return false;
-    seenChen.add(c.n);
-    return true;
-  });
-  chen.length=0;
-  uniqChen.forEach(c=>chen.push(c));
-
+  const uniqChen=chen.filter(c=>{ if(seenChen.has(c.n)) return false; seenChen.add(c.n); return true; });
+  chen.length=0; uniqChen.forEach(c=>chen.push(c));
   const seenZhi=new Set();
-  const uniqZhi=zhi.filter(z=>{
-    if(seenZhi.has(z.n)) return false;
-    seenZhi.add(z.n);
-    return true;
-  });
-  zhi.length=0;
-  uniqZhi.forEach(z=>zhi.push(z));
-
+  const uniqZhi=zhi.filter(z=>{ if(seenZhi.has(z.n)) return false; seenZhi.add(z.n); return true; });
+  zhi.length=0; uniqZhi.forEach(z=>zhi.push(z));
   const seenTips=new Set();
-  const uniqTips=tipsData.filter(t=>{
-    const k=t[0];
-    if(seenTips.has(k)) return false;
-    seenTips.add(k);
-    return true;
-  });
-  tipsData.length=0;
-  uniqTips.forEach(t=>tipsData.push(t));
-  // 行程：按天更新字段（只覆盖文件里有值的字段，不影响其他天）
+  const uniqTips=tipsData.filter(t=>{ const k=t[0]; if(seenTips.has(k)) return false; seenTips.add(k); return true; });
+  tipsData.length=0; uniqTips.forEach(t=>tipsData.push(t));
+
+  const fill=(local,src)=> (local===undefined||local===null||local===''||local===0)?src:local;
+
+  // 行程：本地优先，文件只在本地字段为空时填充
   if(d.E){
     E.forEach((day,i)=>{
       const src=d.E[i];
       if(!src) return;
-      if(src.oc!==undefined) day.oc=src.oc;
-      if(src.oz!==undefined) day.oz=src.oz;
-      if(src.city!==undefined) day.city=src.city;
-      if(src.hist!==undefined) day.hist=src.hist;
-      if(src.nt!==undefined&&src.nt!==null) day.nt=src.nt;
-      if(src.acts!==undefined&&src.acts!==null) day.acts=[...src.acts];
+      day.oc=fill(day.oc,src.oc);
+      day.oz=fill(day.oz,src.oz);
+      day.city=fill(day.city,src.city);
+      day.hist=fill(day.hist,src.hist);
+      if(!day.nt||day.nt===null) day.nt=src.nt;
+      if((!day.acts||!day.acts.length)&&src.acts) day.acts=[...src.acts];
     });
     renderDays(E,'egyptDays','eg');
   }
@@ -1060,60 +1039,67 @@ function mergeData(d){
     T.forEach((day,i)=>{
       const src=d.T[i];
       if(!src) return;
-      if(src.oc!==undefined) day.oc=src.oc;
-      if(src.oz!==undefined) day.oz=src.oz;
-      if(src.city!==undefined) day.city=src.city;
-      if(src.hist!==undefined) day.hist=src.hist;
-      if(src.nt!==undefined&&src.nt!==null) day.nt=src.nt;
-      if(src.acts!==undefined&&src.acts!==null) day.acts=[...src.acts];
+      day.oc=fill(day.oc,src.oc);
+      day.oz=fill(day.oz,src.oz);
+      day.city=fill(day.city,src.city);
+      day.hist=fill(day.hist,src.hist);
+      if(!day.nt||day.nt===null) day.nt=src.nt;
+      if((!day.acts||!day.acts.length)&&src.acts) day.acts=[...src.acts];
     });
     renderDays(T,'turkeyDays','tk');
   }
-  // 注意事项：按内容合并，不重复
+  // 注意事项：本地优先，同名标题只在本地为空时填充
   if(d.tips){
     d.tips.forEach(t=>{
-      const exists=tipsData.some(o=>o[0]===t[0]&&o[1]===t[1]&&o[2]===t[2]);
-      if(!exists) tipsData.push([...t]);
+      const idx=tipsData.findIndex(o=>o[0]===t[0]);
+      if(idx>=0){
+        for(let f=0;f<t.length;f++){ if(!tipsData[idx][f]&&tipsData[idx][f]!==0) tipsData[idx][f]=t[f]; }
+      }else{
+        tipsData.push([...t]);
+      }
     });
     renderTips();
   }
-  // 花费：按项目名（第1列）合并，同名项用文件覆盖本地
+  // 花费：本地优先，同名项目只在本地金额为空时填充
   if(d.exp){
     d.exp.forEach(e=>{
       const idx=exp.findIndex(o=>o[0]===e[0]);
       if(idx>=0){
-        exp[idx]=[...e];
+        for(let f=0;f<e.length;f++){
+          if(f===0||f===3){ if(!exp[idx][f]) exp[idx][f]=e[f]; }
+          else { if(!exp[idx][f]||exp[idx][f]===0) exp[idx][f]=e[f]; }
+        }
       }else{
         exp.push([...e]);
       }
     });
     renderExp();
   }
-  // 小陈物品：按名称合并，同名项用文件覆盖本地
+  // 小陈物品：本地优先，同名项只补充本地为空的备注
   if(d.chen){
     d.chen.forEach(c=>{
       const idx=chen.findIndex(o=>o.n===c.n);
       if(idx>=0){
-        chen[idx]={n:c.n,d:!!c.d,t:c.t||''};
+        if(!chen[idx].t) chen[idx].t=c.t||'';
       }else{
         chen.push({n:c.n,d:!!c.d,t:c.t||''});
       }
     });
     renderL(chen,'cl');
   }
-  // 小智物品：按名称合并，同名项用文件覆盖本地
+  // 小智物品：本地优先
   if(d.zhi){
     d.zhi.forEach(z=>{
       const idx=zhi.findIndex(o=>o.n===z.n);
       if(idx>=0){
-        zhi[idx]={n:z.n,d:!!z.d,t:z.t||''};
+        if(!zhi[idx].t) zhi[idx].t=z.t||'';
       }else{
         zhi.push({n:z.n,d:!!z.d,t:z.t||''});
       }
     });
     renderL(zhi,'zl');
   }
-  if(d.tips||d.exp||d.chen||d.zhi) updPack();
+  if(d.exp||d.chen||d.zhi||d.tips) updPack();
 }
 // 导入数据（合并模式）
 function importData(file){
@@ -1143,7 +1129,13 @@ function importData(file){
   reader.onerror=function(){ alert('导入失败：无法读取文件'); };
   reader.readAsText(file);
 }
-window.exportData=exportData; window.importData=importData; window.collectData=collectData; window.applyData=applyData; window.autoSave=autoSave;
+// 清空本地数据（重置为小智/原始初始数据，需重新导入）
+function clearLocal(){
+  if(!confirm('确定清空手机本地数据？\n清空后需要重新导入文件或重新填写。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+window.exportData=exportData; window.importData=importData; window.collectData=collectData; window.applyData=applyData; window.autoSave=autoSave; window.clearLocal=clearLocal;
 
 // 启动：先加载本地，再尝试云端
 (async()=>{
@@ -1153,16 +1145,15 @@ window.exportData=exportData; window.importData=importData; window.collectData=c
   // 2. 尝试加载云端数据（如果在线）
   const cloud=await cloudLoad();
   if(cloud){
-    // 云端数据更新，用云端覆盖
-    if(!local || (cloud.ts||0) > (local.ts||0)){
-      applyData(cloud);
-      saveLocal();
-    }
+    // 本地优先合并云端，不覆盖本地已填内容
+    mergeData(cloud);
+    saveLocal();
+    cloudSave(collectData());
   }
   // 3. 每30秒自动同步
   setInterval(()=>{ saveLocal(); cloudSave(collectData()); },30000);
-  // 5. 每5分钟从云端拉取最新数据（小智的更新）
-  setInterval(async()=>{ const c=await cloudLoad(); if(c&&(c.ts||0)>(collectData().ts||0)){ applyData(c); saveLocal(); } },300000);
+  // 5. 每5分钟从云端拉取最新数据（小智的更新），本地优先合并
+  setInterval(async()=>{ const c=await cloudLoad(); if(c){ mergeData(c); saveLocal(); cloudSave(collectData()); } },300000);
 })();
 
 // ===== PWA Service Worker 注册 =====
