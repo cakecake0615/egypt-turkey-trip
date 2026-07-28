@@ -1004,6 +1004,44 @@ function exportData(){
 // 合并模式导入：只补充文件里的内容，保留手机上已有的数据，不整体替换
 function mergeData(d){
   if(!d) return;
+  // 先清理现有数据中的重复项
+  const seenExp=new Set();
+  const uniqExp=exp.filter(e=>{
+    const k=e[0];
+    if(seenExp.has(k)) return false;
+    seenExp.add(k);
+    return true;
+  });
+  exp.length=0;
+  uniqExp.forEach(e=>exp.push(e));
+
+  const seenChen=new Set();
+  const uniqChen=chen.filter(c=>{
+    if(seenChen.has(c.n)) return false;
+    seenChen.add(c.n);
+    return true;
+  });
+  chen.length=0;
+  uniqChen.forEach(c=>chen.push(c));
+
+  const seenZhi=new Set();
+  const uniqZhi=zhi.filter(z=>{
+    if(seenZhi.has(z.n)) return false;
+    seenZhi.add(z.n);
+    return true;
+  });
+  zhi.length=0;
+  uniqZhi.forEach(z=>zhi.push(z));
+
+  const seenTips=new Set();
+  const uniqTips=tipsData.filter(t=>{
+    const k=t[0];
+    if(seenTips.has(k)) return false;
+    seenTips.add(k);
+    return true;
+  });
+  tipsData.length=0;
+  uniqTips.forEach(t=>tipsData.push(t));
   // 行程：按天更新字段（只覆盖文件里有值的字段，不影响其他天）
   if(d.E){
     E.forEach((day,i)=>{
@@ -1039,27 +1077,39 @@ function mergeData(d){
     });
     renderTips();
   }
-  // 花费：按内容合并
+  // 花费：按项目名（第1列）合并，同名项用文件覆盖本地
   if(d.exp){
     d.exp.forEach(e=>{
-      const exists=exp.some(o=>String(o)===String(e));
-      if(!exists) exp.push([...e]);
+      const idx=exp.findIndex(o=>o[0]===e[0]);
+      if(idx>=0){
+        exp[idx]=[...e];
+      }else{
+        exp.push([...e]);
+      }
     });
     renderExp();
   }
-  // 小陈物品：按名称合并
+  // 小陈物品：按名称合并，同名项用文件覆盖本地
   if(d.chen){
     d.chen.forEach(c=>{
-      const exists=chen.some(o=>o.n===c.n);
-      if(!exists) chen.push({n:c.n,d:!!c.d,t:c.t||''});
+      const idx=chen.findIndex(o=>o.n===c.n);
+      if(idx>=0){
+        chen[idx]={n:c.n,d:!!c.d,t:c.t||''};
+      }else{
+        chen.push({n:c.n,d:!!c.d,t:c.t||''});
+      }
     });
     renderL(chen,'cl');
   }
-  // 小智物品：按名称合并
+  // 小智物品：按名称合并，同名项用文件覆盖本地
   if(d.zhi){
     d.zhi.forEach(z=>{
-      const exists=zhi.some(o=>o.n===z.n);
-      if(!exists) zhi.push({n:z.n,d:!!z.d,t:z.t||''});
+      const idx=zhi.findIndex(o=>o.n===z.n);
+      if(idx>=0){
+        zhi[idx]={n:z.n,d:!!z.d,t:z.t||''};
+      }else{
+        zhi.push({n:z.n,d:!!z.d,t:z.t||''});
+      }
     });
     renderL(zhi,'zl');
   }
