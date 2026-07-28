@@ -1005,13 +1005,27 @@ function importData(file){
   const reader=new FileReader();
   reader.onload=function(e){
     try{
-      const data=JSON.parse(e.target.result);
+      let raw=e.target.result;
+      // 去掉 UTF-8 BOM 和前后空白
+      raw=raw.replace(/^\uFEFF/,'').trim();
+      let data=JSON.parse(raw);
+      // 兼容后端 API 返回格式 {version:..., data:{E:...}}
+      if(data && data.data && (data.data.E||data.data.T||data.data.tips||data.data.exp||data.data.chen||data.data.zhi)){
+        data=data.data;
+      }
+      if(!data || (!data.E && !data.T && !data.tips && !data.exp && !data.chen && !data.zhi)){
+        throw new Error('文件内容不是旅行工作台数据');
+      }
       applyData(data);
       saveLocal();
       cloudSave(data);
       alert('✓ 数据导入成功！');
-    }catch(err){ alert('导入失败：文件格式错误'); }
+    }catch(err){
+      const preview=String(e.target.result).replace(/^\uFEFF/,'').trim().slice(0,80).replace(/\n/g,' ');
+      alert('导入失败：'+err.message+'\n文件前80字符：'+preview);
+    }
   };
+  reader.onerror=function(){ alert('导入失败：无法读取文件'); };
   reader.readAsText(file);
 }
 window.exportData=exportData; window.importData=importData; window.collectData=collectData; window.applyData=applyData; window.autoSave=autoSave;
