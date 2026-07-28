@@ -955,8 +955,9 @@ function applyData(d){
   }
   if(d.tips){ tipsData.length=0; d.tips.forEach(t=>tipsData.push([...t])); renderTips(); }
   if(d.exp){ exp.length=0; d.exp.forEach(e=>exp.push([...e])); renderExp(); }
-  if(d.chen){ chen.length=0; d.chen.forEach(c=>chen.push({n:c.n,d:c.d,t:c.t})); renderPack(); }
-  if(d.zhi){ zhi.length=0; d.zhi.forEach(z=>zhi.push({n:z.n,d:z.d,t:z.t})); renderPack(); }
+  if(d.chen){ chen.length=0; d.chen.forEach(c=>chen.push({n:c.n,d:c.d,t:c.t})); renderL(chen,'cl'); }
+  if(d.zhi){ zhi.length=0; d.zhi.forEach(z=>zhi.push({n:z.n,d:z.d,t:z.t})); renderL(zhi,'zl'); }
+  if(d.chen||d.zhi){ updPack(); }
 }
 // 保存到本地
 function saveLocal(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(collectData())); }catch(e){} }
